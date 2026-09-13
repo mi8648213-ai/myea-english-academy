@@ -31,9 +31,62 @@ $$("[data-filter]").forEach(a => a.addEventListener("click", () => {
 }));
 renderLessons();
 
-$("#registrationForm")?.addEventListener("submit", e => {
+const WHATSAPP_NUMBER = "2348062626632"; // MYEA WhatsApp number (no + or spaces)
+
+$("#registrationForm")?.addEventListener("submit", async e => {
   e.preventDefault();
+  const form = e.target;
   const msg = $("#formMessage");
-  msg.textContent = "Registration request prepared successfully. To receive submissions online, connect this form to your preferred email or backend service.";
+  const submitBtn = form.querySelector("button[type='submit']");
+  const data = new FormData(form);
+
+  const get = name => (data.get(name) || "").toString().trim();
+  const waText = [
+    "*New Student Registration - MYEA*",
+    `Full Name: ${get("fullName")}`,
+    `Date of Birth: ${get("dob")}`,
+    `Gender: ${get("gender")}`,
+    `Class Level: ${get("level")}`,
+    `Address: ${get("address")}`,
+    `Phone: ${get("phone")}`,
+    `WhatsApp: ${get("whatsapp")}`,
+    `Email: ${get("email")}`,
+    `Guardian Name: ${get("guardianName")}`,
+    `Relationship: ${get("relationship")}`,
+    `Guardian Phone: ${get("guardianPhone")}`
+  ].join("\n");
+  const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText)}`;
+
+  submitBtn.disabled = true;
   msg.style.color = "#176b3a";
+  msg.textContent = "Sending your registration...";
+
+  try {
+    await fetch(form.action, {
+      method: "POST",
+      body: data,
+      headers: { "Accept": "application/json" }
+    });
+    msg.textContent = "Registration sent successfully! Now tap the button below to also confirm via WhatsApp.";
+  } catch (err) {
+    msg.style.color = "#b3261e";
+    msg.textContent = "Could not send by email, but you can still confirm via WhatsApp below.";
+  } finally {
+    submitBtn.disabled = false;
+  }
+
+  let waBtn = $("#waShareBtn");
+  if (!waBtn) {
+    waBtn = document.createElement("a");
+    waBtn.id = "waShareBtn";
+    waBtn.className = "btn btn-gold";
+    waBtn.target = "_blank";
+    waBtn.rel = "noopener";
+    waBtn.textContent = "Send via WhatsApp";
+    waBtn.style.marginTop = "10px";
+    waBtn.style.display = "inline-block";
+    msg.insertAdjacentElement("afterend", waBtn);
+  }
+  waBtn.href = waLink;
+  waBtn.style.display = "inline-block";
 });

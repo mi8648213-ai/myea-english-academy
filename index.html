@@ -125,7 +125,10 @@
 <section class="section" id="register">
   <div class="container register-grid">
     <div><span class="section-tag">ONLINE REGISTRATION</span><h2>Start your English journey today.</h2><p>Use the form to submit a registration request. This starter version prepares the fields from the academy's registration form; we can connect submissions to email, Google Sheets or a backend later.</p><div class="fees"><div><b>Registration Form</b><span>₦500</span></div><div><b>Registration Fee</b><span>₦2,500</span></div><div><b>Monthly Tuition</b><span>₦2,000</span></div><div class="total"><b>Total Initial Payment</b><span>₦5,000</span></div></div></div>
-    <form id="registrationForm" class="form-card">
+    <form id="registrationForm" class="form-card" action="https://formsubmit.co/ajax/moduyerimaenglishacademy@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="New MYEA Student Registration">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
       <h3>Student Registration</h3>
       <label>Full Name<input name="fullName" required></label>
       <div class="two"><label>Date of Birth<input name="dob" type="date"></label><label>Gender<select name="gender"><option value="">Select</option><option>Male</option><option>Female</option></select></label></div>
